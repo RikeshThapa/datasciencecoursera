@@ -23,8 +23,10 @@
 
 #Notes: We are looking at column 11 and 19
 best <- function(state, outcome) { 
+  ##setwd()
+  setwd("C:/Users/Rikesh/Learning/DataScience/CourseraDataScienceSpecialization/1DataScienceR/week4project/")
   ## Read outcome data
-  outcomeData <- read.csv("outcome-of-care-measure", colClasses = "character")
+  outcomeData <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
   ## Check that state and outcome are valid
   statesList<-unique(outcomeData$State)
   try(if(!(state%in%statesList)) stop("invalid state"))
@@ -36,10 +38,12 @@ best <- function(state, outcome) {
   formatOutcome<-paste("Hospital.30.Day.Death..Mortality..Rates.from", "Heart.Failure",sep=".")
   #remove all the NA valued data
   #newDf<- complete.cases(newDf[, formatOutcome])
-  results <-newDf[which(newDf[formatOutcome] == min(newDf[formatOutcome], na.rm = TRUE)), ]
+  #find min value for mortality
+  #print(newDf[formatOutcome])
+  data<- min(na.omit(as.numeric(unlist(newDf[formatOutcome]))))
+  results <-subset(newDf, newDf[formatOutcome] == data)
   hospitalNames <-sort(results$Hospital.Name)
-  hospitalNames[1]
-
+  print(hospitalNames)
 }
 
 simpleCap <- function(x) {
