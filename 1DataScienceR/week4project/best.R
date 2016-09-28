@@ -29,21 +29,20 @@ best <- function(state, outcome) {
   outcomeData <- read.csv("outcome-of-care-measures.csv", colClasses = "character")
   ## Check that state and outcome are valid
   statesList<-unique(outcomeData$State)
-  try(if(!(state%in%statesList)) stop("invalid state"))
+  try(if(!(state%in%statesList))stop("invalid state"))
   possibleOutcomes <- c("heart attack","heart failure","pneumonia")
   try(if(!(outcome%in%possibleOutcomes))stop("invalid outcome"))
   newDf <- subset(outcomeData[outcomeData$State == state , ])
   ## Return hospital name in that state with lowest 30-day death rate
   formatOutcome<-simpleCap(outcome)
-  formatOutcome<-paste("Hospital.30.Day.Death..Mortality..Rates.from", "Heart.Failure",sep=".")
+  formatOutcome<-paste("Hospital.30.Day.Death..Mortality..Rates.from", formatOutcome,sep=".")
   #remove all the NA valued data
   #newDf<- complete.cases(newDf[, formatOutcome])
   #find min value for mortality
-  #print(newDf[formatOutcome])
   data<- min(na.omit(as.numeric(unlist(newDf[formatOutcome]))))
-  results <-subset(newDf, newDf[formatOutcome] == data)
+  results <-subset(newDf, as.numeric(unlist(newDf[formatOutcome])) == data)
   hospitalNames <-sort(results$Hospital.Name)
-  print(hospitalNames)
+  hospitalNames
 }
 
 simpleCap <- function(x) {
